@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float waterMoveSpeedMultiplier = 0.5f;
     [SerializeField] private float waterGravityMultiplier = 0.3f;
     [SerializeField] private float waterExitJumpForce = 10f;
+    [SerializeField] private float waterDamageTime = 5f;
 
     [Header("Swim Mode Settings")]
     [SerializeField] private bool _isInSwimMode = false;
@@ -24,7 +25,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool _isInWater;
     private float _originalGravityScale;
     private float _originalMoveSpeed;
-    private BubbleShield _activeBubbleShield;
+    public BubbleShield _activeBubbleShield;
+    private float _waterDamageTimer = 0f;
 
     private void Awake()
     {
@@ -43,6 +45,9 @@ public class PlayerMovement : MonoBehaviour
         {
             HandleNormalMovement();
         }
+        
+        // Handle water damage timer
+        HandleWaterDamage();
     }
 
     private void HandleNormalMovement()
@@ -88,15 +93,61 @@ public class PlayerMovement : MonoBehaviour
         _activeBubbleShield = null;
     }
 
+    public bool IsInWater()
+    {
+        return _isInWater;
+    }
+
+    private void HandleWaterDamage()
+    {
+        if (_isInWater && _activeBubbleShield == null)
+        {
+            _waterDamageTimer += Time.deltaTime;
+            
+            if (_waterDamageTimer >= waterDamageTime)
+            {
+                Die();
+            }
+        }
+        else
+        {
+            // Reset timer when not in water or when bubble shield is active
+            _waterDamageTimer = 0f;
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("Player died from water damage!");
+        // Use the PlayerHealth component's Die method
+        PlayerHealth playerHealth = GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.Die();
+        }
+        else
+        {
+            Debug.LogError("PlayerHealth component not found on player!");
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Water"))
         {
             _isInWater = true;
+
+            // Notify bubble shield if it exists
+            if (_activeBubbleShield != null)
+            {
+                Debug.Log("Player entered water");
+                _activeBubbleShield.OnPlayerEnterWater();
+            }
             if (!_isInSwimMode)
             {
                 _rb.gravityScale = waterGravityMultiplier;
             }
+            
         }
     }
 

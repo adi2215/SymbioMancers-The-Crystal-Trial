@@ -172,12 +172,14 @@ MonoBehaviour:
   groundCheckRadius: 0.1
   waterMoveSpeedMultiplier: 0.5
   waterGravityMultiplier: 0.7
-  waterExitJumpForce: 10
+  waterExitJumpForce: 8
+  waterDamageTime: 5
   _isInSwimMode: 0
   _swimSpeed: 3
   _swimGravityScale: 0.7
   _isGrounded: 0
   _isInWater: 0
+  _activeBubbleShield: {fileID: 0}
 --- !u!114 &8527701988371979966
 MonoBehaviour:
   m_ObjectHideFlags: 0

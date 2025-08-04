@@ -8,6 +8,7 @@ public class BubbleShield : MonoBehaviour
     
     private PlayerMovement playerMovement;
     private bool isActive = false;
+    private bool swimModeEnabled = false;
 
     private void Start()
     {
@@ -16,10 +17,18 @@ public class BubbleShield : MonoBehaviour
         
         if (playerMovement != null)
         {
-            // Enable swim mode
-            playerMovement.EnableSwimMode(swimSpeed, swimGravityScale);
             isActive = true;
-            Debug.Log("Bubble Shield activated - Swim mode enabled!");
+            
+            // Only enable swim mode if player is already in water
+            playerMovement._activeBubbleShield = this;
+            if (playerMovement.IsInWater())
+            {
+                EnableSwimMode();
+            }
+            else
+            {
+                Debug.Log("Bubble Shield created - Swim mode will activate when entering water!");
+            }
         }
         else
         {
@@ -27,13 +36,40 @@ public class BubbleShield : MonoBehaviour
         }
     }
 
+    private void EnableSwimMode()
+    {
+        if (playerMovement != null && !swimModeEnabled)
+        {
+            playerMovement.EnableSwimMode(swimSpeed, swimGravityScale);
+            swimModeEnabled = true;
+            Debug.Log("Bubble Shield activated - Swim mode enabled!");
+        }
+    }
+
+    private void DisableSwimMode()
+    {
+        if (playerMovement != null && swimModeEnabled)
+        {
+            playerMovement.DisableSwimMode();
+            swimModeEnabled = false;
+            Debug.Log("Bubble Shield deactivated - Swim mode disabled!");
+        }
+    }
+
     private void OnDestroy()
     {
-        if (isActive && playerMovement != null)
+        if (isActive && swimModeEnabled)
         {
-            // Disable swim mode when bubble shield is destroyed
-            playerMovement.DisableSwimMode();
-            Debug.Log("Bubble Shield destroyed - Swim mode disabled!");
+            DisableSwimMode();
+        }
+    }
+
+    // Called when player enters water zone
+    public void OnPlayerEnterWater()
+    {
+        if (isActive && !swimModeEnabled)
+        {
+            EnableSwimMode();
         }
     }
 
@@ -42,6 +78,7 @@ public class BubbleShield : MonoBehaviour
     {
         if (isActive)
         {
+            DisableSwimMode();
             // Destroy the bubble shield when player exits water
             Destroy(gameObject);
         }

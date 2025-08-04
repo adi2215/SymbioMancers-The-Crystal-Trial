@@ -170,7 +170,14 @@ MonoBehaviour:
     m_Bits: 64
   groundCheck: {fileID: 3617869079737379847}
   groundCheckRadius: 0.1
+  waterMoveSpeedMultiplier: 0.5
+  waterGravityMultiplier: 0.7
+  waterExitJumpForce: 10
+  _isInSwimMode: 0
+  _swimSpeed: 3
+  _swimGravityScale: 0.7
   _isGrounded: 0
+  _isInWater: 0
 --- !u!114 &8527701988371979966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +204,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireFollowerPrefab: {fileID: 8883075790150939303, guid: 3cd1da0cbb86c4bf38b354e47f20e2e2, type: 3}
   earthFollowerPrefab: {fileID: 3545362535913964934, guid: 4cb63451c6c6644fbb6940ccf7ea94de, type: 3}
+  airFollowerPrefab: {fileID: 8883075790150939303, guid: 8de01f264064b45829e8619641465324, type: 3}
+  waterFollowerPrefab: {fileID: 8883075790150939303, guid: da5934b765eff46ec9b43549a32958dc, type: 3}
   burningSwordPrefab: {fileID: 3165478196632474123, guid: 8e6e227ba78bf446aa4e18bff59a9258, type: 3}
+  bubbleShieldPrefab: {fileID: 8056053065199999190, guid: a0395e2724cb646a299b2c8400a2c238, type: 3}
 --- !u!70 &-2359277877442224900
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
